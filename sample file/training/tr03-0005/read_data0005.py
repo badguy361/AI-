@@ -1,3 +1,4 @@
+
 import os
 import sys
 import logging
@@ -11,6 +12,15 @@ import tensorflow as tf
 import keras
 import h5py
 import unet # reso full
+
+import numpy as np
+import h5py
+
+f = h5py.File('tr03-0005.mat','r')
+#data = f.get('data/variable1')
+print(f)
+data = np.array(data)
+
 
 #from keras.backend.tensorflow_backend import set_session
 #config = tf.ConfigProto()
