@@ -1,4 +1,5 @@
 
+from sys import displayhook
 from cv2 import VIDEOWRITER_PROP_QUALITY
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,14 +15,14 @@ signals, fields = wfdb.rdsamp('tr03-0005',
                                   sampfrom=800,
                                   channels =[1,3])
 print('sig: \n',signals)
-ann = wfdb.rdann('tr03-0005', 'atr', sampto=3000)
+#ann = wfdb.rdann('tr03-0005', extension='atr', sampto=3000)
+wfdb.plot_wfdb(record = record,title='plot ECG')
+#wfdb.plot_items(signal=record.p_signal,
+                    #ann_samp=[ann.sample, ann.sample],
+ #                   title='MIT-BIH Record 100', time_units='seconds',
+  #                  figsize=(10,4), ecg_grids='all')
 
-wfdb.plot_items(signal=record.p_signal,
-                    ann_samp=[ann.sample, ann.sample],
-                    title='MIT-BIH Record 100', time_units='seconds',
-                    figsize=(10,4), ecg_grids='all')
-
-
+#https://limtoinf.com/%E8%A8%8A%E8%99%9F%E8%99%95%E7%90%86-wfdb-python-%E8%AE%80%E5%8F%96%E8%A8%8A%E8%99%9F/
 '''
 data = scio.loadmat('tr03-0005.mat')
 print('data: \n',data)     		    #大致看一下data的结构
@@ -34,24 +35,4 @@ print('a: \n',a)
 print('target shape: \n',data['val'].shape)
 
 #reference:https://www.cxyzjd.com/article/weixin_45182000/106771498
-
-# ECG 数据处理
-ecg_data = []
-with open('tr03-0005.mat') as ecg_file:
-    lines = ecg_file.readlines()
-for line in lines:
-    ecg_data.append(int(line))    
-sample_rate = 250              #采样频率,每秒250个样本
-x = ecg_data
-sample_count = 6136        #采样数
-t = np.linspace(0,sample_count/sample_rate,sample_count)
-# 作图
-plt.figure(figsize=(20,10))
-ax0 = plt.subplot(211)
-#画时域信号
-#ax0.set_xlim([0, 5])
-ECG_line = ax0.plot(t, x, label='ECG')
-ax0.set_xlabel("Time(s)")
-ax0.set_ylabel("Amp(μV)")
-plt.show()
 '''
