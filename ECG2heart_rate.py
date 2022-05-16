@@ -86,6 +86,17 @@ for file_count in range(len(file_list)):
 with open('../heart_rate_tb(drop unreasonable)/integrity_rate.json', 'w') as fp:
     json.dump(integrity_rate_dict, fp)
 
+#plot integrity rate
+data=pd.read_json('../heart_rate_tb(drop unreasonable)/integrity_rate.json')
+mask=(data["integrity rate"]<0.5)
+data[mask]
+fig,ax=plt.subplots(figsize=(7,7))
+ax.hist(data['integrity rate']*100,bins=30)
+ax.set_yscale("log")
+ax.tick_params(axis='both', which='major', labelsize=12)
+ax.set_xlabel("Integrity Rate (%)",fontsize=12)
+ax.set_ylabel("Number",fontsize=12)
+ax.set_title("Heart Rate Table Integrity Rate",fontsize=15)
     # fig,ax=plt.subplots(3,2,figsize=(20,14))
     # ax[0,0].plot(ecg[window_step*count:window_step*(count+1)])
     # ax[1,0].plot(ecg_scaled[window_step*count:window_step*(count+1)])
