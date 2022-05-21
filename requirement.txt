@@ -1,0 +1,7 @@
+python version: 3.9.7
+conda install numpy=1.21.5
+conda install scipy=1.7.3
+conda install matplotlib=3.5.1
+conda install h5py=3.6.0
+conda install wfdb=3.4.1
+
