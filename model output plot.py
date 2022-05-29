@@ -32,7 +32,7 @@ def model_ouput_plot(input_path,output_path,second_interval=60*30):
 
     bg_color="#202035"
     label_color="white"
-    fig,ax=plt.subplots(figsize=(17,5))
+    fig,ax=plt.subplots(figsize=(20,5))
     lightsleep_patch = mpatches.Patch(color=color["light sleep"], label='light sleep')
     deepsleep_patch = mpatches.Patch(color=color["deep sleep"], label='deep sleep')
     ax.bar(sleep_tb["time"],sleep_tb["predict"],color=sleep_dict["color"])
@@ -49,4 +49,4 @@ def model_ouput_plot(input_path,output_path,second_interval=60*30):
     fig.savefig(f"{output_path}/Sleep Quality.png",dpi=300)
 
 
-model_ouput_plot(input_path="../model output.csv",output_path="..")
+model_ouput_plot(input_path="../model output.csv",output_path="..",second_interval=60*20)
