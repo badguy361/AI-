@@ -52,39 +52,45 @@ def predict(df):
     net.load_state_dict(torch.load('best_model.pth', map_location=device))
     net.eval()
     temp_list = []
+    temp_list_2 = []
     for i in range(len(df)):
         temp = str(df['date time'][i])
         sec = ((temp.split(':')[2]).split('.')[0])[0:2]
         mini = temp.split(':')[1]
         hour = (temp.split(':')[0]).split(' ')[-1]
-        time_str = hour + mini + sec
+        time_str = hour  + mini + sec
+        time_str2 = hour + ':' + mini + ':' + sec
         temp_list.append([float(time_str),float(df['X'][i]),float(df['Y'][i]),float(df['Z'][i])])
+        temp_list_2.append(time_str2)
     temp_kill = 0
     save_list = []
+    save_list_2 = []
     for k in range(len(temp_list)):
         if temp_list[k][0] != temp_kill:
             temp_kill = temp_list[k][0]
             save_list.append(temp_list[k])
+            save_list_2.append(temp_list_2[k])
         temp_kill = temp_list[k][0]
     save_list = np.array(save_list)
     test = save_list[:,1:]
+    time_record = save_list_2
     x_np = torch.from_numpy(test)
     x_np = x_np.reshape(len(x_np),3)
     x_np = x_np.to(device=device, dtype=torch.float32)
     pre_y=net(x_np)
     pre_y = pre_y.cpu().detach().numpy()
     predict_output = list(pre_y.argmax(1))
-    print(predict_output.count(1),predict_output.count(0))
-    print(predict_output.count(1)/len(predict_output))
     Total_Sleep_Time = f'{len(predict_output)//3600}:{(len(predict_output)-((len(predict_output)//3600)*3600))//60}:{(len(predict_output)%3600)%60}'
     Total_Light_Sleep_Time = f'{(predict_output.count(0))//3600}:{((predict_output.count(0))-(((predict_output.count(0))//3600)*3600))//60}:{((predict_output.count(0))%3600)%60}'
     Total_Deep_Sleep_Time = f'{(predict_output.count(1))//3600}:{((predict_output.count(1))-(((predict_output.count(1))//3600)*3600))//60}:{((predict_output.count(1))%3600)%60}'
-    output = {'Predict':predict_output,'Total Sleep Time':Total_Sleep_Time,'Total Light Sleep Time':Total_Light_Sleep_Time,'Total Deep Sleep Time':Total_Deep_Sleep_Time}
+    Total_Deep_Sleep_probability = predict_output.count(1)/len(predict_output)*100
+    Total_Light_Sleep_probability = predict_output.count(0)/len(predict_output)*100
+    output = {'Predict':predict_output,'Time Record(s)':time_record,'Total Sleep Time':Total_Sleep_Time,'Total Light Sleep Time':Total_Light_Sleep_Time,'Total Deep Sleep Time':Total_Deep_Sleep_Time,'Deep Sleep Probability(%)':Total_Deep_Sleep_probability,'Light Sleep Probability(%)':Total_Light_Sleep_probability}
     return output
 
 file_path = 'C:/Users/niko/Desktop/EarthScience/Senior_2/AI_proj/vibration_train/0525data.csv'
 final_data=vibration_preprocess(file_path)
 
 predict_output = predict(final_data)
-print(predict_output)
-
+df = pd.DataFrame(predict_output)
+df.to_csv('output.csv')
